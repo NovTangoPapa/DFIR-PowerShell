@@ -2,7 +2,7 @@
 #requires -version 2.0
 
 <#
- 	.SYNOPSIS
+    .SYNOPSIS
         Find recently opened files and associated SHA256 hash
     .DESCRIPTION
         Find recently opened files and associated SHA256 hash.  This is done by taking
