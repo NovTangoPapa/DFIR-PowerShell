@@ -1,4 +1,3 @@
-
 #requires -version 2.0
 
 <#
@@ -44,7 +43,7 @@ Foreach($Item in $Items)
         If($WebSiteItem.IsFolder)
         {
             $SiteFolder = $WebSiteItem.GetFolder
-            $SiteFolder.Items()|Foreach{$URL = $($SiteFolder.GetDetailsOf($_,0))
+            $SiteFolder.Items() | ForEach-Object{$URL = $($SiteFolder.GetDetailsOf($_,0))
                                         $Date = $($SiteFolder.GetDetailsOf($_,2))
 
             $Obj = New-Object -TypeName PSObject -Property @{URL = $URL
@@ -52,7 +51,8 @@ Foreach($Item in $Items)
             $Objs += $Obj}
         }
     }
-$Objs | Where-Object {$_.URL -match "file:*"} | Export-Csv -Path "$CSVFilePath\$(hostname)IEHistory.csv" -NoTypeInformation -Append -NoClobber
+$Objs | Where-Object {$_.URL -match "file:*"} | 
+Export-Csv -Path "$CSVFilePath\$(hostname)IEHistory.csv" -NoTypeInformation -Append -NoClobber
 }
 
 $FileHashList = Import-Csv -Path "$CSVFilePath\$(hostname)IEHistory.csv" | 
@@ -61,14 +61,18 @@ ForEach-Object{$_.URL = $_.URL -replace 'file:///', ''
 $_
 } | 
 ForEach-Object{$_.FileHash = $_.FileHash -replace '', `
-$(if($(Test-Path $_.URL) -eq $true){
+$(if($(Test-Path $_.URL) -eq $true)
+{
     $(Get-FileHash -Path $_.URL).Hash
 }
-else{$move = "file moved or deleted"
-$move
+else
+{
+    $move = "file moved or deleted"
+    $move
 }
     )
 $_
 }
 
-$FileHashList | Sort-Object URL,FileHash -Unique | Export-Csv -Path "$CSVFilePath\$(hostname)FileHashes.csv" -NoTypeInformation
+$FileHashList | Sort-Object URL,FileHash -Unique | 
+Export-Csv -Path "$CSVFilePath\$(hostname)FileHashes.csv" -NoTypeInformation
