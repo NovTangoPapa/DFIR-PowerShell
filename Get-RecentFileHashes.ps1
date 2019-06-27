@@ -60,18 +60,19 @@ Select-Object *,"FileHash" |
 ForEach-Object{$_.URL = $_.URL -replace 'file:///', ''
 $_
 } | 
-ForEach-Object{$_.FileHash = $_.FileHash -replace '', `
-$(if($(Test-Path $_.URL) -eq $true)
-{
-    $(Get-FileHash -Path $_.URL).Hash
-}
-else
-{
-    $move = "file moved or deleted"
-    $move
-}
-    )
-$_
+ForEach-Object{
+    $_.FileHash = $_.FileHash -replace '', `
+    $(if($(Test-Path $_.URL) -eq $true)
+    {
+        $(Get-FileHash -Path $_.URL).Hash
+    }
+    else
+    {
+        $move = "file moved or deleted"
+        $move
+    }
+        )
+    $_
 }
 
 $FileHashList | Sort-Object URL,FileHash -Unique | 
