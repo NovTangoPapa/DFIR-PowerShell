@@ -56,7 +56,7 @@ Export-Csv -Path "$CSVFilePath\$(hostname)IEHistory.csv" -NoTypeInformation -App
 }
 
 $FileHashList = Import-Csv -Path "$CSVFilePath\$(hostname)IEHistory.csv" | 
-Select-Object *,"FileHash" |
+Sort-Object URL -Unique |Select-Object *,"FileHash" |
 ForEach-Object{$_.URL = $_.URL -replace 'file:///', ''
 $_
 } | 
@@ -75,5 +75,4 @@ ForEach-Object{
     $_
 }
 
-$FileHashList | Sort-Object URL,FileHash -Unique | 
-Export-Csv -Path "$CSVFilePath\$(hostname)FileHashes.csv" -NoTypeInformation
+$FileHashList | Export-Csv -Path "$CSVFilePath\$(hostname)FileHashes.csv" -NoTypeInformation
